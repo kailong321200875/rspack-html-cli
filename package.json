@@ -1,0 +1,15 @@
+{
+  "name": "rspack-multi-page",
+  "version": "1.0.0",
+  "description": "Rspack 多页应用示例",
+  "scripts": {
+    "dev": "rspack serve -c build/rspack.dev.js",
+    "build": "rspack build -c build/rspack.prod.js"
+  },
+  "devDependencies": {
+    "@rspack/cli": "^1.1.8",
+    "@rspack/core": "^1.1.8",
+    "less-loader": "^12.2.0",
+    "webpack-merge": "^6.0.1"
+  }
+}
