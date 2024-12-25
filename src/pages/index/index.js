@@ -1,14 +1,15 @@
-import "./index.less";
-document.getElementById("app").innerHTML = "这是首页的 JavaScript 内容";
+import './index.less'
 
-const addNumber = (a, b) => {
-  return a + b;
-};
-const test = undefined;
+document.getElementById('app').innerHTML = '这是首页的 JavaScript 内容'
 
-console.log(test ?? "222");
+function addNumber(a, b) {
+  return a + b
+}
+
+addNumber(1, 2)
+
 const object = {
-  name: "zhangsan",
-};
-console.log(object?.name);
-console.log(addNumber(1, 2));
+  name: 'zhangsan',
+}
+
+object.name = 'lisi'

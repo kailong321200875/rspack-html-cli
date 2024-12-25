@@ -1,17 +1,18 @@
-const { merge } = require("webpack-merge");
-const baseConfig = require("./rspack.base.conf.js");
+const { merge } = require('webpack-merge')
+const baseConfig = require('./rspack.base.conf.js')
 
+/** @type {import('@rspack/cli').Configuration} */
 module.exports = merge(baseConfig, {
-  mode: "production",
+  mode: 'production',
   module: {
     rules: [
       {
         test: /\.js$/,
         use: {
-          loader: "builtin:swc-loader",
+          loader: 'builtin:swc-loader',
           options: {
             env: {
-              targets: ["> 0.25%"],
+              targets: ['> 0.25%'],
             },
           },
         },
@@ -21,15 +22,15 @@ module.exports = merge(baseConfig, {
   optimization: {
     minimize: true,
     splitChunks: {
-      chunks: "all",
+      chunks: 'all',
       cacheGroups: {
         vendors: {
-          name: "vendors",
+          name: 'vendors',
           test: /[\\/]node_modules[\\/]/,
           priority: -10,
         },
         common: {
-          name: "common",
+          name: 'common',
           minChunks: 2,
           priority: -20,
           reuseExistingChunk: true,
@@ -38,12 +39,12 @@ module.exports = merge(baseConfig, {
     },
   },
   performance: {
-    hints: "warning",
+    hints: 'warning',
     maxAssetSize: 300 * 1024, // 降低单个资源大小限制
     maxEntrypointSize: 500 * 1024, // 降低入口文件大小限制
-    assetFilter: function (assetFilename) {
+    assetFilter(assetFilename) {
       // 只对 js 和 css 文件进行大小检查
-      return /\.(js|css)$/.test(assetFilename);
+      return /\.(?:js|css)$/.test(assetFilename)
     },
   },
-});
+})
