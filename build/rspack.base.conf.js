@@ -1,7 +1,14 @@
 const path = require('node:path')
 const rspack = require('@rspack/core')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const loadEnv = require('./env')
 const utils = require('./utils')
+
+// 获取当前环境
+const mode = process.env.CLI_NODE_ENV || 'development'
+
+// 加载环境变量
+const env = loadEnv(mode)
 
 /** @type {import('@rspack/cli').Configuration} */
 module.exports = {
@@ -87,18 +94,6 @@ module.exports = {
       chunks: ['index'],
       favicon: path.resolve(__dirname, '../public/index.ico'),
     }),
-    // new rspack.HtmlRspackPlugin({
-    //   template: path.resolve(__dirname, "../src/pages/index/index.html"),
-    //   filename: "index.html",
-    //   chunks: ["index"],
-    //   favicon: path.resolve(__dirname, "../public/index.ico"),
-    // }),
-    // new rspack.HtmlRspackPlugin({
-    //   template: path.resolve(__dirname, "../src/pages/about/about.html"),
-    //   filename: "about.html",
-    //   chunks: ["about"],
-    //   favicon: path.resolve(__dirname, "../public/about.ico"),
-    // }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, '../src/pages/about/about.html'),
       filename: 'about.html',
@@ -108,6 +103,9 @@ module.exports = {
     new rspack.CssExtractRspackPlugin({
       filename: 'css/[name].[contenthash].css',
       chunkFilename: 'css/[id].[contenthash].css',
+    }),
+    new rspack.DefinePlugin({
+      'process.env': JSON.stringify(env),
     }),
   ],
 }

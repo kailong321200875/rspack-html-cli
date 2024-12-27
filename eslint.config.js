@@ -26,4 +26,10 @@ module.exports = antfu({
     markdown: 'prettier',
   },
   ignores: ['*-lock', 'dist/*', 'public/*', 'assets/*'],
+  rules: {
+    'n/prefer-global/process': 'off',
+  },
+  globals: {
+    process: true,
+  },
 })
