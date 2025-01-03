@@ -1,5 +1,6 @@
 const path = require('node:path')
 const rspack = require('@rspack/core')
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const loadEnv = require('./env')
 const utils = require('./utils')
@@ -13,14 +14,14 @@ const env = loadEnv(mode)
 /** @type {import('@rspack/cli').Configuration} */
 module.exports = {
   entry: {
-    index: path.resolve(__dirname, '../src/pages/index/index.js'),
+    index: path.resolve(__dirname, '../src/pages/index/index.ts'),
     about: path.resolve(__dirname, '../src/pages/about/index.js'),
   },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, '../src'),
     },
-    extensions: ['.js', '.less'],
+    extensions: ['.ts', '.js', '.less'],
   },
   output: {
     filename: 'js/[name].[contenthash].js',
@@ -29,6 +30,21 @@ module.exports = {
   },
   module: {
     rules: [
+      {
+        test: /\.ts$/,
+        use: [
+          {
+            loader: 'builtin:swc-loader',
+            options: {
+              jsc: {
+                parser: {
+                  syntax: 'typescript',
+                },
+              },
+            },
+          },
+        ],
+      },
       {
         test: /\.html$/,
         use: 'html-loader',
@@ -51,7 +67,7 @@ module.exports = {
         test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
         type: 'asset',
         generator: {
-          filename: 'media/[name].[contenthash][ext]',
+          filename: 'media/[name].[hash][ext]',
         },
       },
       // Less Modules 配置
@@ -103,6 +119,16 @@ module.exports = {
     new rspack.CssExtractRspackPlugin({
       filename: 'css/[name].[contenthash].css',
       chunkFilename: 'css/[id].[contenthash].css',
+    }),
+    new ForkTsCheckerWebpackPlugin({
+      typescript: {
+        diagnosticOptions: {
+          semantic: true,
+          syntactic: true,
+        },
+        mode: 'write-references',
+      },
+      async: true,
     }),
     new rspack.DefinePlugin({
       'process.env': JSON.stringify(env),
